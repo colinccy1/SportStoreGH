@@ -8,16 +8,27 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SportStoreGH.Models;
+using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
 
 namespace SportStoreGH
 {
     public class Startup
     {
+        IConfigurationRoot configuration;
+
+        public Startup(IHostingEnvironment env)
+        {
+            configuration = new ConfigurationBuilder().SetBasePath(env.ContentRootPath).AddJsonFile("appsettings.json").Build();
+        }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<IProductRepository, FakeProductRepository>();
+            services.AddDbContext<ApplicationDbcontext>(options => options.UseSqlServer(
+                configuration["Data:SportStoreProducts:ConnectionString"]));
+            services.AddTransient<IProductRepository, EFProductRepository>();
             services.AddMvc();
         }
 
@@ -32,7 +43,7 @@ namespace SportStoreGH
                 routes.MapRoute(name: "default",
                  template: "{controller=Product}/{action=List}/{id?}");
             });
-
+            SeedData.EnsurePopulated(app);
         }
     }
 }

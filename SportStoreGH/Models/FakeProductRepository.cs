@@ -9,9 +9,9 @@ namespace SportStoreGH.Models
     {
         public IEnumerable<Product> Products => new List<Product>
         {
-            new Product {Name="Football",Price=25},
-            new Product {Name="Surf board",Price=179},
-            new Product {Name="Running shoes",Price=95}
+            new Product {Name="Football",Price=25,Description="1"},
+            new Product {Name="Surf board",Price=179,Description="2"},
+            new Product {Name="Running shoes",Price=95,Description="3"}
         };
     }
 }
